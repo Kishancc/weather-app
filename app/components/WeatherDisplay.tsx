@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,7 +12,9 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  TooltipItem,
+  ChartData
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { format } from 'date-fns';
@@ -49,6 +52,12 @@ interface ForecastData {
 interface GeoResponse {
   lat: number;
   lon: number;
+}
+
+interface TooltipContext {
+  parsed: {
+    y: number;
+  };
 }
 
 export default function WeatherDisplay({ location }: WeatherDisplayProps) {
@@ -172,7 +181,7 @@ export default function WeatherDisplay({ location }: WeatherDisplayProps) {
         displayColors: true,
         usePointStyle: true,
         callbacks: {
-          label: function(context: any) {
+          label: function(context: TooltipContext) {
             return `Temperature: ${context.parsed.y.toFixed(1)}°C`;
           }
         }
@@ -248,12 +257,15 @@ export default function WeatherDisplay({ location }: WeatherDisplayProps) {
           Current Weather in {location}
         </h2>
         <div className="flex items-center gap-4 bg-white/80 rounded-lg p-4 shadow-sm">
-          <div className="relative">
+          <div className="relative w-24 h-24">
             <div className="absolute inset-0 bg-blue-50 rounded-full blur-xl"></div>
-            <img
+            <Image
               src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`}
               alt={weatherData.weather[0].description}
-              className="w-24 h-24 relative z-10"
+              className="relative z-10"
+              width={96}
+              height={96}
+              priority
             />
           </div>
           <div>
