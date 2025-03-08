@@ -94,15 +94,18 @@ export default function WeatherDisplay({ location }: WeatherDisplayProps) {
 
         setWeatherData(weatherResponse.data);
         setForecastData(forecastResponse.data);
-      } catch (err: any) {
-        if (err.response?.status === 401) {
+      } catch (error: unknown) {
+        const axiosError = error as { response?: { status: number }; message?: string };
+        if (axiosError.response?.status === 401) {
           setError('Invalid API key. Please check your .env.local file.');
-        } else if (err.response?.status === 404) {
+        } else if (axiosError.response?.status === 404) {
           setError('Location not found. Please try another location.');
+        } else if (error instanceof Error) {
+          setError(error.message);
         } else {
-          setError(err.message || 'Failed to fetch weather data. Please try again.');
+          setError('Failed to fetch weather data. Please try again.');
         }
-        console.error('Error fetching weather data:', err);
+        console.error('Error fetching weather data:', error);
       } finally {
         setLoading(false);
       }

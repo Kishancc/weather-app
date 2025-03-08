@@ -1,19 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import WeatherDisplay from './components/WeatherDisplay';
 import SearchBar from './components/SearchBar';
+import WeatherDisplay from './components/WeatherDisplay';
 
 export default function Home() {
   const [location, setLocation] = useState('');
-  const [weatherData, setWeatherData] = useState(null);
 
-  const handleSearch = async (searchLocation: string) => {
-    setLocation(searchLocation);
+  const handleSearch = (searchTerm: string) => {
+    setLocation(searchTerm);
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-sky-100 via-rose-100 to-amber-100 p-4 sm:p-8">
+    <main className="min-h-screen p-4 md:p-8 bg-gradient-to-br from-blue-50 to-pink-50">
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="text-center space-y-4 animate-fade-in">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-800 drop-shadow-sm">
@@ -24,11 +23,7 @@ export default function Home() {
           </p>
         </div>
         <SearchBar onSearch={handleSearch} />
-        {location && (
-          <div className="animate-slide-up">
-            <WeatherDisplay location={location} />
-          </div>
-        )}
+        {location && <WeatherDisplay location={location} />}
       </div>
     </main>
   );
